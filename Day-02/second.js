@@ -11,45 +11,43 @@ fs.readFile(filePath, "utf8", (err, data) => {
   const lines = data.split("\n");
 
   let sum = 0;
-  let gameId = 1;
   // Process each line
   lines.forEach((line) => {
-    const isPossible = checkPossibility(line);
-    isPossible && (sum += gameId);
-    gameId++;
+    const sessionResult = checkMinQuantity(line);
+    sessionResult > 0 && (sum += sessionResult);
   });
   console.log("Sum: ", sum);
 });
 
-function checkPossibility(str) {
-  let isPossible = true;
+function checkMinQuantity(str) {
   const sessionsArray = getSessionsArray(str); //get an array of all sessions per game
+  let minRed = 0;
+  let minGreen = 0;
+  let minBlue = 0;
   for (const session of sessionsArray) {
     //session check
     let sessionArray = session.split(",");
     sessionArray = sessionArray.map((color) => color.trim()); //remove spaces from the array
     for (const cubeColor of sessionArray) {
       //cubeColor validator for each session
-      const quantity = parseInt(cubeColor.charAt(0) + cubeColor.charAt(1));
+      const currentValue = parseInt(cubeColor.charAt(0) + cubeColor.charAt(1));
       if (cubeColor.includes("red")) {
-        if (quantity > 12) {
-          isPossible = false;
-          break;
+        if (minRed < currentValue) {
+          minRed = currentValue;
         }
       } else if (cubeColor.includes("green")) {
-        if (quantity > 13) {
-          isPossible = false;
-          break;
+        if (minGreen < currentValue) {
+          minGreen = currentValue;
         }
       } else if (cubeColor.includes("blue")) {
-        if (quantity > 14) {
-          isPossible = false;
-          break;
+        if (minBlue < currentValue) {
+          minBlue = currentValue;
         }
       }
     }
   }
-  return isPossible;
+  const sessionResult = minRed * minGreen * minBlue;
+  return sessionResult;
 }
 
 function getSessionsArray(str) {

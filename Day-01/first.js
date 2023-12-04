@@ -27,10 +27,5 @@ fs.readFile(filePath, "utf8", (err, data) => {
 
 function extractNumbers(str) {
   const numbersArray = str.match(/\d/g);
-  if (numbersArray) {
-    const numbers = numbersArray.map(Number);
-    return numbers;
-  } else {
-    return [];
-  }
+  return numbersArray.map(Number);
 }
