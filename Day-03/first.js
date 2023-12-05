@@ -1,7 +1,7 @@
 const fs = require("fs");
 
 const filePath = "input.txt";
-let perLineData = []; //array objekata svake procesirane linije
+let perLineData = []; //array of all processed lines
 
 fs.readFile(filePath, "utf8", (err, data) => {
   if (err) {
@@ -25,7 +25,7 @@ fs.readFile(filePath, "utf8", (err, data) => {
 });
 
 function getLineNumbersAndSymbolIndexes(line) {
-  let currentIndex = -1;
+  let currentIndex = 0;
 
   let lineData = {
     numbers: [],
@@ -37,7 +37,6 @@ function getLineNumbersAndSymbolIndexes(line) {
     indexes: [],
   };
   for (const char of line) {
-    currentIndex += 1;
     if (char.match(/[^\w\s.0-9]/g)) {
       if (tempNumber.number != "") {
         lineData.numbers.push(tempNumber);
@@ -72,13 +71,12 @@ function getLineNumbersAndSymbolIndexes(line) {
         indexes: [],
       };
     }
+    currentIndex += 1;
   }
   return lineData;
 }
 
 function getAllValidNumbers(data) {
-  //treba returnat samo brojeve koji su uz simbole
-  //validni su oni koji u rangeu indexa -1, {broj}, +1 na sve tri linije imaju bar jedan simbol u bilokojoj liniji
   let allValidNumbers = [];
   let previousLine;
   let currentLine;
@@ -96,8 +94,7 @@ function getAllValidNumbers(data) {
     ] = getLineData(previousLine, currentLine, nextLine);
 
     if (!previousLine) {
-      //prva
-      //check current vs next
+      //runs on the first line
       currentLineNumberIndexes.forEach((numberIndexArray) => {
         const isMatching = numberIndexArray.some((index) =>
           nextLineSymbolIndexes.includes(index)
@@ -111,8 +108,7 @@ function getAllValidNumbers(data) {
         }
       });
     } else if (!nextLine) {
-      //zadnja
-      //check current vs prev
+      //runs on the last line
       currentLineNumberIndexes.forEach((numberIndexArray) => {
         const isMatching = numberIndexArray.some((index) =>
           previousLineSymbolIndexes.includes(index)
@@ -126,7 +122,7 @@ function getAllValidNumbers(data) {
         }
       });
     } else {
-      //check current vs prev vs next
+      //runs on all in-between lines
       currentLineNumberIndexes.forEach((numberIndexArray) => {
         const isMatching = numberIndexArray.some(
           (index) =>
