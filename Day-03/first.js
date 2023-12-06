@@ -93,53 +93,21 @@ function getAllValidNumbers(data) {
       nextLineSymbolIndexes,
     ] = getLineData(previousLine, currentLine, nextLine);
 
-    if (!previousLine) {
-      //runs on the first line
-      currentLineNumberIndexes.forEach((numberIndexArray) => {
-        const isMatching = numberIndexArray.some((index) =>
-          nextLineSymbolIndexes.includes(index)
+    currentLineNumberIndexes.forEach((numberIndexArray) => {
+      const isMatching = numberIndexArray.some(
+        (index) =>
+          nextLineSymbolIndexes?.includes(index) ||
+          previousLineSymbolIndexes?.includes(index) ||
+          currentLineSymbolIndexes.includes(index)
+      );
+      if (isMatching) {
+        const matchingNumberValues = getMatchingNumberValues(
+          currentLine,
+          numberIndexArray
         );
-        if (isMatching) {
-          const matchingNumberValues = getMatchingNumberValues(
-            currentLine,
-            numberIndexArray
-          );
-          allValidNumbers.push(...matchingNumberValues);
-        }
-      });
-    } else if (!nextLine) {
-      //runs on the last line
-      currentLineNumberIndexes.forEach((numberIndexArray) => {
-        const isMatching = numberIndexArray.some((index) =>
-          previousLineSymbolIndexes.includes(index)
-        );
-        if (isMatching) {
-          const matchingNumberValues = getMatchingNumberValues(
-            currentLine,
-            numberIndexArray
-          );
-          allValidNumbers.push(...matchingNumberValues);
-        }
-      });
-    } else {
-      //runs on all in-between lines
-      currentLineNumberIndexes.forEach((numberIndexArray) => {
-        const isMatching = numberIndexArray.some(
-          (index) =>
-            nextLineSymbolIndexes.includes(index) ||
-            previousLineSymbolIndexes.includes(index) ||
-            currentLineSymbolIndexes.includes(index)
-        );
-
-        if (isMatching) {
-          const matchingNumberValues = getMatchingNumberValues(
-            currentLine,
-            numberIndexArray
-          );
-          allValidNumbers.push(...matchingNumberValues);
-        }
-      });
-    }
+        allValidNumbers.push(...matchingNumberValues);
+      }
+    });
   });
   return allValidNumbers;
 }
