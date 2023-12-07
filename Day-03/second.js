@@ -101,28 +101,26 @@ function getAllValidNumbers(data) {
         next: null,
       };
       star.forEach((index) => {
-        previousLine
-          ? previousLineNumberIndexes.some((number) => {
-              if (number.includes(index)) {
-                starValidNumbers.prev = getMatchingNumberValues(
-                  previousLine,
-                  star
-                );
-              }
-            })
-          : null;
+        previousLine &&
+          previousLineNumberIndexes.some((number) => {
+            if (number.includes(index)) {
+              starValidNumbers.prev = getMatchingNumberValues(
+                previousLine,
+                star
+              );
+            }
+          });
         currentLineNumberIndexes.some((number) => {
           if (number.includes(index)) {
             starValidNumbers.curr = getMatchingNumberValues(currentLine, star);
           }
         });
-        nextLine
-          ? nextLineNumberIndexes.some((number) => {
-              if (number.includes(index)) {
-                starValidNumbers.next = getMatchingNumberValues(nextLine, star);
-              }
-            })
-          : null;
+        nextLine &&
+          nextLineNumberIndexes.some((number) => {
+            if (number.includes(index)) {
+              starValidNumbers.next = getMatchingNumberValues(nextLine, star);
+            }
+          });
       });
 
       if (starValidNumbers.prev && starValidNumbers.curr) {
