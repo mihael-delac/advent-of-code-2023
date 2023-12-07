@@ -123,42 +123,17 @@ function getAllValidNumbers(data) {
           });
       });
 
-      if (starValidNumbers.prev && starValidNumbers.curr) {
-        allValidNumbers.push(starValidNumbers.prev * starValidNumbers.curr[0]);
-      } else if (starValidNumbers.curr && starValidNumbers.next) {
-        allValidNumbers.push(
-          starValidNumbers.curr[0] * starValidNumbers.next[0]
-        );
-      } else if (starValidNumbers.prev && starValidNumbers.next) {
-        allValidNumbers.push(
-          starValidNumbers.prev[0] * starValidNumbers.next[0]
-        );
-      } //edge cases
-      else if (starValidNumbers.prev) {
-        const edgeCase = starValidNumbers.prev[0] * starValidNumbers.prev[1];
-        if (!isNaN(edgeCase)) {
-          allValidNumbers.push(edgeCase);
-        }
-      } else if (starValidNumbers.curr) {
-        const edgeCase = starValidNumbers.curr[0] * starValidNumbers.curr[1];
-        if (!isNaN(edgeCase)) {
-          allValidNumbers.push(edgeCase);
-        }
-      } else if (starValidNumbers.next) {
-        const edgeCase = starValidNumbers.next[0] * starValidNumbers.next[1];
-        if (!isNaN(edgeCase)) {
-          allValidNumbers.push(edgeCase);
-        }
-      }
+      const product = getValidNumbersProduct(starValidNumbers);
+      product && allValidNumbers.push(product);
     });
   });
   return allValidNumbers;
 }
 
 function getLineData(prev, curr, next) {
-  const previousLineNumberIndexes = prev
-    ? prev.numbers.map((value) => value.indexes)
-    : null;
+  const previousLineNumberIndexes =
+    prev && prev.numbers.map((value) => value.indexes);
+
   const currentLineNumberIndexes = curr.numbers.map((value) => value.indexes); //i
   const currentLineSymbolIndexes = curr.stars.map((index) => [
     index - 1,
@@ -166,9 +141,9 @@ function getLineData(prev, curr, next) {
     index + 1,
   ]);
 
-  const nextLineNumberIndexes = next
-    ? next.numbers.map((value) => value.indexes)
-    : null;
+  const nextLineNumberIndexes =
+    next && next.numbers.map((value) => value.indexes);
+
   return [
     previousLineNumberIndexes,
     currentLineNumberIndexes,
@@ -185,4 +160,26 @@ function getMatchingNumberValues(line, starIndexArray) {
     (item) => parseInt(item.number) || null
   );
   return matchingNumberValues;
+}
+
+function getValidNumbersProduct(validNumbers) {
+  if (validNumbers.prev && validNumbers.curr) {
+    return validNumbers.prev * validNumbers.curr[0];
+  } else if (validNumbers.curr && validNumbers.next) {
+    return validNumbers.curr[0] * validNumbers.next[0];
+  } else if (validNumbers.prev && validNumbers.next) {
+    return validNumbers.prev[0] * validNumbers.next[0];
+  } else if (validNumbers.prev) {
+    return checkEdgeCase(validNumbers.prev);
+  } else if (validNumbers.curr) {
+    return checkEdgeCase(validNumbers.curr);
+  } else if (validNumbers.next) {
+    return checkEdgeCase(validNumbers.next);
+  }
+  function checkEdgeCase(numbers) {
+    const edgeCase = numbers[0] * numbers[1];
+    if (!isNaN(edgeCase)) {
+      return edgeCase;
+    }
+  }
 }
