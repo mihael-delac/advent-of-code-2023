@@ -14,7 +14,6 @@ fs.readFile(filePath, "utf8", (err, data) => {
   let sum = 0;
 
   for (const line of lines) {
-    const id = lines.indexOf(line) + 1;
     const currentLine = getLineNumbersAndSymbolIndexes(line.split(""));
     perLineData.push(currentLine);
   }
