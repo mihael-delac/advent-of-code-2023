@@ -27,7 +27,6 @@ fs.readFile(filePath, "utf8", (err, data) => {
     winningNumbers.some((num) => {
       numbersList.includes(num) && matchingNumbers.push(num);
     });
-    console.log(matchingNumbers);
     const points = matchingNumbers.length && 2 ** (matchingNumbers.length - 1);
     sum += points;
   }

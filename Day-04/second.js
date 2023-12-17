@@ -4,7 +4,7 @@ const filePath = "input.txt";
 
 let allCardsData = {};
 
-let totalNumberOfCards = 6;
+let totalNumberOfCards = 0;
 
 fs.readFile(filePath, "utf8", (err, data) => {
   if (err) {
@@ -52,32 +52,18 @@ function getCardData(line, id) {
 
 function getNumberOfCopies() {
   for (const cardId in allCardsData) {
-    const maxDepth = allCardsData[cardId].matchingNumbers.length;
-    if (maxDepth) {
-      checkWinningTree(
-        allCardsData[cardId + 1],
-        parseInt(cardId) + 1,
-        maxDepth
-      );
-      console.log(
-        " cardId:",
-        cardId,
-        " number of copies:",
-        allCardsData[cardId].numberOfCopies,
-        " max matching numbers count:",
-        maxDepth
-      );
-    }
-    console.log(" total number of cards:", totalNumberOfCards);
+    countCardsPerLine(allCardsData[cardId], parseInt(cardId));
   }
 }
-function checkWinningTree(card, id, maxDepth, depth = 1) {
-  if (depth > maxDepth) {
-    return;
+function countCardsPerLine(card, id) {
+  const matchingNumbersCount = card.matchingNumbers.length;
+  totalNumberOfCards++;
+  card.numberOfCopies++;
+  if (matchingNumbersCount) {
+    for (let i = 1; i < matchingNumbersCount + 1; i++) {
+      countCardsPerLine(allCardsData[id + i], id + i);
+    }
+  } else {
+    return 0;
   }
-  console.log(depth);
-  // card.numberOfCopies += 1;
-  totalNumberOfCards += 1;
-  depth += 1;
-  return checkWinningTree(allCardsData[id + 1], id + 1, maxDepth, depth);
 }
