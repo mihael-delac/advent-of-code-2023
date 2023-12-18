@@ -1,4 +1,4 @@
-const fs = require("fs");
+const { loadInput } = require("../loadInput");
 
 let allCardsData = {};
 let totalNumberOfCards = 0;
@@ -62,14 +62,4 @@ function countCardsPerLine(card, id) {
   } else {
     return 0;
   }
-}
-
-async function loadInput() {
-  const filePath = "input.txt";
-  return await new Promise((resolve, reject) => {
-    fs.readFile(filePath, "utf8", (err, data) => {
-      if (err) reject(err);
-      else resolve(data.split("\n"));
-    });
-  });
 }

@@ -1,4 +1,4 @@
-const fs = require("fs");
+const { loadInput } = require("../loadInput");
 
 async function main() {
   let perLineData = []; //array of all processed lines
@@ -176,14 +176,4 @@ function getValidNumbersProduct(validNumbers) {
       return edgeCase;
     }
   }
-}
-
-async function loadInput() {
-  const filePath = "input.txt";
-  return await new Promise((resolve, reject) => {
-    fs.readFile(filePath, "utf8", (err, data) => {
-      if (err) reject(err);
-      else resolve(data.split("\n"));
-    });
-  });
 }

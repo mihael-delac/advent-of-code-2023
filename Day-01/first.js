@@ -1,4 +1,4 @@
-const fs = require("fs");
+const { loadInput } = require("../loadInput");
 
 async function main() {
   let sum = 0;
@@ -22,14 +22,4 @@ main();
 function extractNumbers(str) {
   const numbersArray = str.match(/\d/g);
   return numbersArray.map(Number);
-}
-
-async function loadInput() {
-  const filePath = "input.txt";
-  return await new Promise((resolve, reject) => {
-    fs.readFile(filePath, "utf8", (err, data) => {
-      if (err) reject(err);
-      else resolve(data.split("\n"));
-    });
-  });
 }
