@@ -1,17 +1,9 @@
 const fs = require("fs");
 
-const filePath = "input.txt";
-let perLineData = []; //array of all processed lines
-
-fs.readFile(filePath, "utf8", (err, data) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
-
-  const lines = data.split("\n");
-
+async function main() {
+  let perLineData = []; //array of all processed lines
   let sum = 0;
+  const lines = await loadInput();
 
   for (const line of lines) {
     const currentLine = getLineNumbersAndSymbolIndexes(line.split(""));
@@ -21,7 +13,9 @@ fs.readFile(filePath, "utf8", (err, data) => {
   const allValidNumbers = getAllValidNumbers(perLineData);
   sum = allValidNumbers.reduce((a, b) => a + b);
   console.log("Sum: ", sum);
-});
+}
+
+main();
 
 function getLineNumbersAndSymbolIndexes(line) {
   let currentIndex = 0;
@@ -182,4 +176,14 @@ function getValidNumbersProduct(validNumbers) {
       return edgeCase;
     }
   }
+}
+
+async function loadInput() {
+  const filePath = "input.txt";
+  return await new Promise((resolve, reject) => {
+    fs.readFile(filePath, "utf8", (err, data) => {
+      if (err) reject(err);
+      else resolve(data.split("\n"));
+    });
+  });
 }

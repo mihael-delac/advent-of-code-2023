@@ -1,25 +1,19 @@
 const fs = require("fs");
 
-const filePath = "input.txt";
-
-fs.readFile(filePath, "utf8", (err, data) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
-
-  const lines = data.split("\n");
-
+async function main() {
   let sum = 0;
   let gameId = 1;
-  // Process each line
+  const lines = await loadInput();
+
   lines.forEach((line) => {
     const isPossible = checkPossibility(line);
     isPossible && (sum += gameId);
     gameId++;
   });
   console.log("Sum: ", sum);
-});
+}
+
+main();
 
 function checkPossibility(str) {
   let isPossible = true;
@@ -56,4 +50,14 @@ function getSessionsArray(str) {
   let sessionsArray = str.split(":"); //split the 'Game X:'
   sessionsArray = sessionsArray[1].split(";"); //devide by sessions per line
   return sessionsArray;
+}
+
+async function loadInput() {
+  const filePath = "input.txt";
+  return await new Promise((resolve, reject) => {
+    fs.readFile(filePath, "utf8", (err, data) => {
+      if (err) reject(err);
+      else resolve(data.split("\n"));
+    });
+  });
 }

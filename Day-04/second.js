@@ -1,18 +1,11 @@
 const fs = require("fs");
 
-const filePath = "input.txt";
-
 let allCardsData = {};
-
 let totalNumberOfCards = 0;
 
-fs.readFile(filePath, "utf8", (err, data) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
-  const lines = data.split("\n");
+async function main() {
   let cardId = 0;
+  const lines = await loadInput();
 
   for (const line of lines) {
     cardId += 1;
@@ -21,7 +14,9 @@ fs.readFile(filePath, "utf8", (err, data) => {
   }
   getNumberOfCopies();
   console.log(totalNumberOfCards);
-});
+}
+
+main();
 
 function getCardData(line, id) {
   let winningNumbers, numbersList;
@@ -55,6 +50,7 @@ function getNumberOfCopies() {
     countCardsPerLine(allCardsData[cardId], parseInt(cardId));
   }
 }
+
 function countCardsPerLine(card, id) {
   const matchingNumbersCount = card.matchingNumbers.length;
   totalNumberOfCards++;
@@ -66,4 +62,14 @@ function countCardsPerLine(card, id) {
   } else {
     return 0;
   }
+}
+
+async function loadInput() {
+  const filePath = "input.txt";
+  return await new Promise((resolve, reject) => {
+    fs.readFile(filePath, "utf8", (err, data) => {
+      if (err) reject(err);
+      else resolve(data.split("\n"));
+    });
+  });
 }

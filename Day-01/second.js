@@ -1,24 +1,18 @@
 const fs = require("fs");
 
-const filePath = "input.txt";
+async function main() {
+  let sum = 0;
+  const lines = await loadInput();
 
-fs.readFile(filePath, "utf8", (err, data) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
-
-  const lines = data.split("\n");
-
-  let sum = 0; // Global Sum
-  // Process each line
   lines.forEach((line) => {
     const numbersArray = extractNumbers(line) || []; // [firstNumber, lastNumber]
     const number = parseInt(numbersArray.join("")); // firstNumber + lastNumber
     sum += number;
   });
   console.log("Sum: ", sum);
-});
+}
+
+main();
 
 function extractNumbers(str) {
   const lineString = str.split("");
@@ -82,4 +76,14 @@ function reverseString(str) {
   const reversedArray = stringArray.reverse();
   const reversedString = reversedArray.join("");
   return reversedString;
+}
+
+async function loadInput() {
+  const filePath = "input.txt";
+  return await new Promise((resolve, reject) => {
+    fs.readFile(filePath, "utf8", (err, data) => {
+      if (err) reject(err);
+      else resolve(data.split("\n"));
+    });
+  });
 }

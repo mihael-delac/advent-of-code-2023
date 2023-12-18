@@ -1,17 +1,9 @@
 const fs = require("fs");
 
-const filePath = "input.txt";
-
-fs.readFile(filePath, "utf8", (err, data) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
-
-  const lines = data.split("\n");
-
+async function main() {
   let sum = 0;
-  // Process each line
+  const lines = await loadInput();
+
   lines.forEach((line) => {
     const numbers = extractNumbers(line);
     if (numbers.length == 1) {
@@ -23,9 +15,21 @@ fs.readFile(filePath, "utf8", (err, data) => {
     }
   });
   console.log("Sum: ", sum);
-});
+}
+
+main();
 
 function extractNumbers(str) {
   const numbersArray = str.match(/\d/g);
   return numbersArray.map(Number);
+}
+
+async function loadInput() {
+  const filePath = "input.txt";
+  return await new Promise((resolve, reject) => {
+    fs.readFile(filePath, "utf8", (err, data) => {
+      if (err) reject(err);
+      else resolve(data.split("\n"));
+    });
+  });
 }

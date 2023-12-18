@@ -1,16 +1,8 @@
 const fs = require("fs");
 
-const filePath = "input.txt";
-
-fs.readFile(filePath, "utf8", (err, data) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
-
-  const lines = data.split("\n");
-
+async function main() {
   let sum = 0;
+  const lines = await loadInput();
 
   for (const line of lines) {
     const currentLine = line.split(/[|:]/).splice(1);
@@ -32,4 +24,16 @@ fs.readFile(filePath, "utf8", (err, data) => {
   }
 
   console.log("Sum: ", sum);
-});
+}
+
+main();
+
+async function loadInput() {
+  const filePath = "input.txt";
+  return await new Promise((resolve, reject) => {
+    fs.readFile(filePath, "utf8", (err, data) => {
+      if (err) reject(err);
+      else resolve(data.split("\n"));
+    });
+  });
+}
